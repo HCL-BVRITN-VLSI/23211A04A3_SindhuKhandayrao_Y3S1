@@ -10,7 +10,7 @@ module bitbalancer (
     always @(posedge clk or posedge reset) begin
         if (reset) 
         begin
-            count <= 0;     // reset count to zero when reset is asserted
+            count <= 0;     // reset count to zero when reset is high
         end 
         else 
         begin
