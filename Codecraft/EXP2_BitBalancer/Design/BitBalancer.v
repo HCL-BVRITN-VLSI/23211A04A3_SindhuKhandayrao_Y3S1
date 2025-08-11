@@ -1,21 +1,28 @@
-module bitbalancer (clk,reset,in,count);
-    
-    input [7:0]in;
-    input clk,reset;
-    output reg [3:0]count;
-   
+module bitbalancer (
+    input        clk,
+    input        reset,
+    input  [7:0] in,
+    output reg [3:0] count
+);
+
     integer i;
-  always @(posedge clk or posedge reset) begin
-    if (reset)                     //when input is reset,count should be 0
-                count <= 0;
-            else begin                   
-                count <= 0;
-              for (i = 0; i < 8; i = i + 1)
-                  count = count + in[i];        //adds the total number of ones ,everytime one is detected  it is added to count
-              
+
+    always @(posedge clk or posedge reset) 
+    begin
+        if (reset)
+         begin
+            count <= 0;
+        end
+        else begin
+            count <= 0;
+            for (i = 0; i < 8; i = i + 1)
+             begin
+                count <= count + in[i];
             end
         end
+    end
 endmodule
+
 /*
 module bitbalancer(
   input  [7:0] in,
