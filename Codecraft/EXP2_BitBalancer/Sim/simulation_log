@@ -1,0 +1,47 @@
+Time=0 | reset=1 | in=00000000 | count=0
+Time=6000 | reset=0 | in=00000000 | count=0
+Test passed for input 00000000: Count = 0
+Time=16000 | reset=0 | in=11111111 | count=0
+Time=25000 | reset=0 | in=11111111 | count=8
+Test passed for input 11111111: Count = 8
+Time=26000 | reset=0 | in=00000001 | count=8
+Time=35000 | reset=0 | in=00000001 | count=1
+Test passed for input 00000001: Count = 1
+Time=36000 | reset=0 | in=10000000 | count=1
+Test passed for input 10000000: Count = 1
+Time=46000 | reset=0 | in=10101010 | count=1
+Time=55000 | reset=0 | in=10101010 | count=4
+Test passed for input 10101010: Count = 4
+Time=56000 | reset=0 | in=01010101 | count=4
+Test passed for input 01010101: Count = 4
+Time=66000 | reset=0 | in=00111100 | count=4
+Test passed for input 00111100: Count = 4
+Time=76000 | reset=0 | in=00011000 | count=4
+Time=85000 | reset=0 | in=00011000 | count=2
+Test passed for input 00011000: Count = 2
+Time=86000 | reset=0 | in=00001111 | count=2
+Time=95000 | reset=0 | in=00001111 | count=4
+Test passed for input 00001111: Count = 4
+Time=96000 | reset=0 | in=11110000 | count=4
+Test passed for input 11110000: Count = 4
+Time=106000 | reset=0 | in=11000011 | count=4
+Test passed for input 11000011: Count = 4
+Time=116000 | reset=0 | in=10010110 | count=4
+Test passed for input 10010110: Count = 4
+Time=126000 | reset=0 | in=01111110 | count=4
+Time=135000 | reset=0 | in=01111110 | count=6
+Test passed for input 01111110: Count = 6
+Time=136000 | reset=0 | in=00000010 | count=6
+Time=145000 | reset=0 | in=00000010 | count=1
+Test passed for input 00000010: Count = 1
+Time=146000 | reset=0 | in=01000001 | count=1
+Time=155000 | reset=0 | in=01000001 | count=2
+Test passed for input 01000001: Count = 2
+Time=156000 | reset=0 | in=00100100 | count=2
+Test passed for input 00100100: Count = 2
+Time=166000 | reset=0 | in=01100110 | count=2
+Time=175000 | reset=0 | in=01100110 | count=4
+Test passed for input 01100110: Count = 4
+Time=176000 | reset=1 | in=01100110 | count=0
+Reset test passed: Count = 0
+All tests completed.
