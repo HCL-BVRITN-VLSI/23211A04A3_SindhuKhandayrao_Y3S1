@@ -1,4 +1,4 @@
-DESIGN REPORT
+##DESIGN REPORT
 PROBLEM STATEMENT
 The goal of this project is to create a reliable pulse detection module that filters out noise from a noisy input signal and generates a clean, single-cycle pulse on the stable rising edge of the input. Noisy signals often cause false triggers, so debouncing is required to ensure accurate detection.
 
