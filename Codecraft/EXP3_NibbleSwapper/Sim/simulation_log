@@ -1,0 +1,27 @@
+=== Starting NibbleSwapper Test ===
+--- Critical Testcases ---
+PASS: in=71 swap_en=1 ? out=17
+PASS: in=a5 swap_en=0 ? out=17
+PASS: in=b4 swap_en=1 ? out=4b
+PASS: in=c3 swap_en=1 ? out=3c
+PASS: in=f0 swap_en=0 ? out=3c
+PASS: in=f0 swap_en=1 ? out=0f
+PASS: in=11 swap_en=1 ? out=11
+PASS: in=22 swap_en=1 ? out=22
+PASS: in=3c swap_en=1 ? out=c3
+PASS: in=3c swap_en=1 ? out=c3
+PASS: in=00 swap_en=1 ? out=00
+PASS: in=ff swap_en=1 ? out=ff
+ PASS: Output held on swap_en=0
+--- Generic Testcases ---
+PASS: in=a5 swap_en=1 ? out=5a
+PASS: in=5a swap_en=1 ? out=a5
+PASS: in=0f swap_en=1 ? out=f0
+PASS: in=f0 swap_en=1 ? out=0f
+PASS: in=aa swap_en=1 ? out=aa
+PASS: in=55 swap_en=1 ? out=55
+PASS: in=c0 swap_en=1 ? out=0c
+PASS: in=03 swap_en=1 ? out=30
+PASS: in=10 swap_en=1 ? out=01
+PASS: in=01 swap_en=1 ? out=10
+=== NibbleSwapper Test Completed ===
