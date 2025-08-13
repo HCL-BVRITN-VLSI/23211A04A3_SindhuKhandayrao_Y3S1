@@ -1,104 +1,66 @@
+**DESIGN REPORT**
+**PROBLEM STATEMENT**
+The goal of this project is to create a reliable pulse detection module that filters out noise from a noisy input signal and generates a clean, single-cycle pulse on the stable rising edge of the input. Noisy signals often cause false triggers, so debouncing is required to ensure accurate detection.
 
+**USE CASE**
+This PulseTracer module can be used wherever input signals are prone to glitches or bouncing—such as mechanical switches, sensors, or asynchronous digital inputs. It ensures that only stable high signals, sustained for a certain time, generate pulses, preventing erroneous system behavior caused by noise.
 
-# **DESIGN REPORT**
+**DESIGN REQUIREMENTS**
+The module must detect when the noisy input signal stays continuously high for a predefined number of clock cycles (FILTER_LEN).
 
-## **1. Problem Statement**
+Generate a one-clock-cycle pulse output at the rising edge of the stable input.
 
-The goal of this project is to design a reliable **Pulse Detection Module** that filters out noise from a noisy input signal and generates a clean, **single-clock-cycle pulse** on the stable rising edge of the input.
+Ignore short glitches or noise shorter than FILTER_LEN cycles.
 
-Noisy signals can cause **false triggers**, so **debouncing** is required to ensure accurate detection.
+Reset functionality must initialize the internal registers and outputs reliably.
 
----
+**DESIGN CONSTRAINTS**
+The debounce filter length (FILTER_LEN) impacts detection latency; a larger value filters noise better but increases delay.
 
-## **2. Use Case**
+The design assumes a synchronous clock domain and requires the noisy input to be sampled at the clock rate.
 
-The **PulseTracer** module can be applied in scenarios where input signals are prone to glitches or bouncing, such as:
+The reset is active-low and asynchronous.
 
-* Mechanical switches
-* Sensors
-* Asynchronous digital inputs
+**DESIGN METHODOLOGY & IMPLEMENTATION DETAILS**
+The design uses a shift register (filter_reg) to store the last FILTER_LEN samples of the noisy input.
 
-It ensures that only **stable high signals**, sustained for a defined number of clock cycles, generate pulses—preventing **erroneous system behavior** caused by noise.
+When all bits in the shift register are high, the input is considered stable high.
 
----
+When all bits are low, the input is considered stable low.
 
-## **3. Design Requirements**
+The stable input is stored in debounced.
 
-* Detect when the noisy input stays continuously **high** for **FILTER\_LEN** clock cycles.
-* Generate a **one-clock-cycle pulse** at the **rising edge** of the stable input.
-* Ignore short glitches or noise shorter than **FILTER\_LEN** cycles.
-* Provide a **reliable reset** that initializes internal registers and outputs.
+To detect the rising edge, the current debounced value is compared to the previous value (prev_debounced).
 
----
+When debounced transitions from 0 to 1, the output pulse_out is asserted for one clock cycle.
 
-## **4. Design Constraints**
+All registers and outputs are reset to 0 during active-low reset.
 
-* **FILTER\_LEN** directly impacts detection latency:
+**FUNCTIONAL SIMULATION METHODOLOGY & TEST CASES**
+*Test Case 1* : Short Glitch — No Pulse Expected
+In this test, the noisy input is briefly set high for only 1 clock cycle, which is less than the required FILTER_LEN (3 cycles). This simulates a short glitch or noise spike. The expectation is that the PulseTracer module will not generate a pulse output, because the input did not remain stable high long enough to be considered valid.
 
-  * Larger → better noise filtering, more delay
-  * Smaller → faster response, less filtering
-* Operates in a **synchronous clock domain**; noisy input sampled at clock rate.
-* **Reset** is **active-low** and **asynchronous**.
+*Test Case 2* : Valid Pulse Detection
+Here, the input signal stays continuously high for exactly FILTER_LEN clock cycles, which satisfies the debounce length. This simulates a clean rising edge that should be detected as stable. The module should output a single-cycle pulse at the first clock after the input is recognized as stable. This confirms the core functionality of the debounce and pulse generation.
 
----
+*Test Case 3* : Alternating Noise — No Pulse Expected
+This case feeds a random pattern of highs and lows to simulate noisy or bouncing signals. Because the input does not stay stable high for FILTER_LEN consecutive cycles at any point, the module should not produce any pulses. This verifies the robustness of the filter against fluctuating noise.
 
-## **5. Design Methodology & Implementation**
+*Test Case 4* : Two Valid Pulses with Low Separation
+This test simulates two stable high signals separated by a low period. The first high period lasts for at least FILTER_LEN cycles, triggering the first pulse. Then the signal goes low for a few cycles, resetting the filter. Finally, a second stable high period again longer than FILTER_LEN cycles occurs, triggering a second pulse. This verifies that the module can detect multiple pulses separated by low intervals reliably.
 
-**Core Principle:** Debouncing using a shift register.
+*Test Case 5 *: Long Held High — Only One Pulse
+In this case, the input goes high and stays high for a long duration, well beyond the debounce period. The module should generate only one pulse at the initial rising edge and then keep the output low for subsequent cycles despite the input staying high. This prevents multiple pulses from being generated for a single continuous high input.
 
-**Implementation Steps:**
+*Test Case 6* : Glitch During Rising Period
+Here, the input starts to rise but is interrupted by a brief low glitch before reaching the full FILTER_LEN stable cycles. After the glitch, the input again remains high for enough cycles to become stable. This test checks that the debounce filter resets when glitches occur and correctly detects a pulse only after the input stabilizes again, preventing false triggers during the glitch.
 
-1. **Sampling & Storage:**
+*Test Case 7* : Random Noise Followed by Valid Pulse
+This final test applies a long sequence of random noise to simulate a real-world noisy environment. After the noise period, the input is driven low briefly and then held high stably for FILTER_LEN cycles, expecting a valid pulse. This test verifies that the module can recover from noisy conditions and still detect a correct pulse when a stable input eventually arrives.
 
-   * Use a **shift register (`filter_reg`)** to store the last **FILTER\_LEN** samples of the noisy input.
-2. **Stability Check:**
+**RESULTS & ANALYSIS**
+Simulation waveforms confirm that the module filters out glitches and noise, generating pulses only on stable rising edges. The pulse output remains high for exactly one clock cycle at the correct time, matching the design intent. No false pulses were seen during noisy conditions or glitches, demonstrating effective debounce filtering.
 
-   * All bits high → input considered **stable high**.
-   * All bits low → input considered **stable low**.
-3. **Debounced Signal:**
-
-   * Stored in `debounced` register.
-4. **Edge Detection:**
-
-   * Compare `debounced` to `prev_debounced`.
-   * **0 → 1 transition** triggers a one-clock-cycle **`pulse_out`**.
-5. **Reset Logic:**
-
-   * Active-low reset clears all registers and outputs to `0`.
-
----
-
-## **6. Functional Simulation Methodology & Test Cases**
-
-| **Test Case**                        | **Description**                                           | **Expected Result**                  |
-| ------------------------------------ | --------------------------------------------------------- | ------------------------------------ |
-| **1: Short Glitch — No Pulse**       | Input high for < FILTER\_LEN cycles.                      | No pulse generated.                  |
-| **2: Valid Pulse Detection**         | Input high for exactly FILTER\_LEN cycles.                | Single pulse generated.              |
-| **3: Alternating Noise**             | Random highs/lows, never stable high for FILTER\_LEN.     | No pulse generated.                  |
-| **4: Two Valid Pulses**              | Two stable high periods separated by a low period.        | Two separate pulses generated.       |
-| **5: Long Held High**                | Input high beyond FILTER\_LEN.                            | Only one initial pulse generated.    |
-| **6: Glitch During Rising Period**   | High interrupted by brief low before FILTER\_LEN reached. | Pulse only after second stable high. |
-| **7: Noise Followed by Valid Pulse** | Random noise followed by stable high period.              | Single valid pulse generated.        |
-
----
-
-## **7. Results & Analysis**
-
-* **Glitches & Noise:** Successfully filtered.
-* **Pulse Timing:** Exactly **one clock cycle** on stable rising edges.
-* **No False Pulses:** Verified under multiple noise patterns.
-* **Robustness:** Recovered correctly after noise sequences.
-
----
-
-## **8. Challenges & Conclusions**
-
-**Challenges:**
-
-* Selecting **FILTER\_LEN** involved balancing **noise immunity vs. response speed**.
-* Shorter values → more responsive but less immune.
-* Longer values → more immune but slower.
-
-**Conclusion:**
-The **PulseTracer** module provides an **efficient and adaptable** solution for detecting stable pulses from noisy inputs. By tuning **FILTER\_LEN**, it can be tailored for specific applications, ensuring **accurate and noise-immune detection** in real-world conditions.
+**CHALLENGES & CONCLUSIONS*
+Choosing an appropriate FILTER_LEN required balancing noise immunity against responsiveness. Shorter FILTER_LEN values are more responsive but prone to noise, while longer values add latency. The testbench confirmed the design behaves correctly under various noise and input conditions. Overall, the PulseTracer module provides a simple and effective solution to detect stable pulses from noisy signals and can be easily adapted for different applications by tuning FILTER_LEN.
 
