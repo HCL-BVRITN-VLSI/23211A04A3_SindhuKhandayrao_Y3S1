@@ -1,0 +1,107 @@
+[TC1] Short Glitch (Should NOT trigger pulse)
+Time 25000 | noisy_in=1 | pulse_out=0
+Time 35000 | noisy_in=0 | pulse_out=0
+Time 45000 | noisy_in=0 | pulse_out=0
+Time 55000 | noisy_in=0 | pulse_out=0
+Time 65000 | noisy_in=0 | pulse_out=0
+Time 75000 | noisy_in=0 | pulse_out=0
+
+[TC2] Stable high for FILTER_LEN (Should trigger 1 pulse)
+Time 85000 | noisy_in=1 | pulse_out=0
+Time 95000 | noisy_in=1 | pulse_out=0
+Time 105000 | noisy_in=1 | pulse_out=0
+Time 115000 | noisy_in=1 | pulse_out=0
+Time 125000 | noisy_in=0 | pulse_out=1
+Time 135000 | noisy_in=0 | pulse_out=0
+Time 145000 | noisy_in=0 | pulse_out=0
+
+[TC3] Alternating glitches (Should NOT trigger pulse)
+Time 155000 | noisy_in=0 | pulse_out=0
+Time 165000 | noisy_in=1 | pulse_out=0
+Time 175000 | noisy_in=1 | pulse_out=0
+Time 185000 | noisy_in=1 | pulse_out=0
+Time 195000 | noisy_in=1 | pulse_out=0
+Time 205000 | noisy_in=1 | pulse_out=1
+Time 215000 | noisy_in=1 | pulse_out=0
+Time 225000 | noisy_in=0 | pulse_out=0
+Time 235000 | noisy_in=1 | pulse_out=0
+Time 245000 | noisy_in=1 | pulse_out=0
+
+[TC4] Two valid pulses with low separation
+Time 255000 | noisy_in=1 | pulse_out=0
+Time 265000 | noisy_in=1 | pulse_out=0
+Time 275000 | noisy_in=1 | pulse_out=0
+Time 285000 | noisy_in=1 | pulse_out=0
+Time 295000 | noisy_in=0 | pulse_out=0
+Time 305000 | noisy_in=0 | pulse_out=0
+Time 315000 | noisy_in=0 | pulse_out=0
+Time 325000 | noisy_in=1 | pulse_out=0
+Time 335000 | noisy_in=1 | pulse_out=0
+Time 345000 | noisy_in=1 | pulse_out=0
+Time 355000 | noisy_in=1 | pulse_out=0
+Time 365000 | noisy_in=0 | pulse_out=1
+Time 375000 | noisy_in=0 | pulse_out=0
+Time 385000 | noisy_in=0 | pulse_out=0
+
+[TC5] Long held high (Only one pulse)
+Time 395000 | noisy_in=1 | pulse_out=0
+Time 405000 | noisy_in=1 | pulse_out=0
+Time 415000 | noisy_in=1 | pulse_out=0
+Time 425000 | noisy_in=1 | pulse_out=0
+Time 435000 | noisy_in=1 | pulse_out=1
+Time 445000 | noisy_in=1 | pulse_out=0
+Time 455000 | noisy_in=1 | pulse_out=0
+Time 465000 | noisy_in=1 | pulse_out=0
+Time 475000 | noisy_in=1 | pulse_out=0
+Time 485000 | noisy_in=1 | pulse_out=0
+Time 495000 | noisy_in=1 | pulse_out=0
+Time 505000 | noisy_in=1 | pulse_out=0
+Time 515000 | noisy_in=1 | pulse_out=0
+Time 525000 | noisy_in=0 | pulse_out=0
+Time 535000 | noisy_in=0 | pulse_out=0
+Time 545000 | noisy_in=0 | pulse_out=0
+
+[TC6] Glitch during FILTER_LEN build-up
+Time 555000 | noisy_in=1 | pulse_out=0
+Time 565000 | noisy_in=0 | pulse_out=0
+Time 575000 | noisy_in=1 | pulse_out=0
+Time 585000 | noisy_in=1 | pulse_out=0
+Time 595000 | noisy_in=1 | pulse_out=0
+Time 605000 | noisy_in=1 | pulse_out=0
+Time 615000 | noisy_in=0 | pulse_out=1
+Time 625000 | noisy_in=0 | pulse_out=0
+Time 635000 | noisy_in=0 | pulse_out=0
+
+[TC7] Random noise, then forced valid pulse
+Time 645000 | noisy_in=0 | pulse_out=0
+Time 655000 | noisy_in=1 | pulse_out=0
+Time 665000 | noisy_in=1 | pulse_out=0
+Time 675000 | noisy_in=0 | pulse_out=0
+Time 685000 | noisy_in=1 | pulse_out=0
+Time 695000 | noisy_in=0 | pulse_out=0
+Time 705000 | noisy_in=1 | pulse_out=0
+Time 715000 | noisy_in=0 | pulse_out=0
+Time 725000 | noisy_in=1 | pulse_out=0
+Time 735000 | noisy_in=1 | pulse_out=0
+Time 745000 | noisy_in=0 | pulse_out=0
+Time 755000 | noisy_in=1 | pulse_out=0
+Time 765000 | noisy_in=0 | pulse_out=0
+Time 775000 | noisy_in=0 | pulse_out=0
+Time 785000 | noisy_in=0 | pulse_out=0
+Time 795000 | noisy_in=1 | pulse_out=0
+Time 805000 | noisy_in=0 | pulse_out=0
+Time 815000 | noisy_in=1 | pulse_out=0
+Time 825000 | noisy_in=1 | pulse_out=0
+Time 835000 | noisy_in=1 | pulse_out=0
+Time 845000 | noisy_in=0 | pulse_out=0
+Time 855000 | noisy_in=0 | pulse_out=1
+Time 865000 | noisy_in=0 | pulse_out=0
+Time 875000 | noisy_in=1 | pulse_out=0
+Time 885000 | noisy_in=1 | pulse_out=0
+Time 895000 | noisy_in=1 | pulse_out=0
+Time 905000 | noisy_in=1 | pulse_out=0
+Time 915000 | noisy_in=0 | pulse_out=1
+Time 925000 | noisy_in=0 | pulse_out=0
+Time 935000 | noisy_in=0 | pulse_out=0
+
+All tests complete.
