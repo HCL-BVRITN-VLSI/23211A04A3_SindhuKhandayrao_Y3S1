@@ -1,0 +1,39 @@
+[Time 26000] Input:   0 | in_valid: 1 | EVEN: 1 | ODD: 0 | Expected:      EVEN
+PASSED
+[Time 36000] Input:   1 | in_valid: 1 | EVEN: 0 | ODD: 1 | Expected:       ODD
+PASSED
+[Time 46000] Input:   2 | in_valid: 1 | EVEN: 1 | ODD: 0 | Expected:      EVEN
+PASSED
+[Time 56000] Input: 255 | in_valid: 1 | EVEN: 0 | ODD: 1 | Expected:       ODD
+PASSED
+[Time 66000] Input: 128 | in_valid: 1 | EVEN: 1 | ODD: 0 | Expected:      EVEN
+PASSED
+[Time 76000] Input: 127 | in_valid: 1 | EVEN: 0 | ODD: 1 | Expected:       ODD
+PASSED
+[Time 86000] Input: 254 | in_valid: 1 | EVEN: 1 | ODD: 0 | Expected:      EVEN
+PASSED
+[Time 96000] Input:   3 | in_valid: 0 | EVEN: 1 | ODD: 0 | Expected: NO CHANGE
+[Time 106000] Input:   4 | in_valid: 1 | EVEN: 1 | ODD: 0 | Expected:      EVEN
+PASSED
+[Time 116000] Input:   5 | in_valid: 1 | EVEN: 0 | ODD: 1 | Expected:       ODD
+PASSED
+[Time 126000] Input:  10 | in_valid: 1 | EVEN: 1 | ODD: 0 | Expected:      EVEN
+PASSED
+[Time 136000] Input:  11 | in_valid: 1 | EVEN: 0 | ODD: 1 | Expected:       ODD
+PASSED
+[Time 146000] Input:   6 | in_valid: 0 | EVEN: 0 | ODD: 1 | Expected: NO CHANGE
+[Time 156000] Input:   6 | in_valid: 1 | EVEN: 1 | ODD: 0 | Expected:      EVEN
+PASSED
+[Time 166000] Input:   9 | in_valid: 1 | EVEN: 0 | ODD: 1 | Expected:       ODD
+PASSED
+[Time 176000] Input:  12 | in_valid: 1 | EVEN: 1 | ODD: 0 | Expected:      EVEN
+PASSED
+[Time 186000] Input:  13 | in_valid: 1 | EVEN: 0 | ODD: 1 | Expected:       ODD
+PASSED
+[Time 196000] Input:  14 | in_valid: 1 | EVEN: 1 | ODD: 0 | Expected:      EVEN
+PASSED
+[Time 206000] Input:  15 | in_valid: 1 | EVEN: 0 | ODD: 1 | Expected:       ODD
+PASSED
+[Time 216000] Input:  16 | in_valid: 1 | EVEN: 1 | ODD: 0 | Expected:      EVEN
+PASSED
+All test cases executed.
