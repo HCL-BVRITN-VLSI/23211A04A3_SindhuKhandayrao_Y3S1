@@ -49,7 +49,7 @@ This case feeds a random pattern of highs and lows to simulate noisy or bouncing
 *Test Case 4* : Two Valid Pulses with Low Separation
 This test simulates two stable high signals separated by a low period. The first high period lasts for at least FILTER_LEN cycles, triggering the first pulse. Then the signal goes low for a few cycles, resetting the filter. Finally, a second stable high period again longer than FILTER_LEN cycles occurs, triggering a second pulse. This verifies that the module can detect multiple pulses separated by low intervals reliably.
 
-*Test Case 5 *: Long Held High — Only One Pulse
+*Test Case 5*: Long Held High — Only One Pulse
 In this case, the input goes high and stays high for a long duration, well beyond the debounce period. The module should generate only one pulse at the initial rising edge and then keep the output low for subsequent cycles despite the input staying high. This prevents multiple pulses from being generated for a single continuous high input.
 
 *Test Case 6* : Glitch During Rising Period
