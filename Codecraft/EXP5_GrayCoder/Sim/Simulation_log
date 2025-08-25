@@ -1,0 +1,22 @@
+----- Starting GrayCoder Testbench -----
+[PASS] Time: 16000 | Input = 0000 | Output = 0000
+[PASS] Time: 26000 | Input = 0001 | Output = 0001
+[PASS] Time: 36000 | Input = 0010 | Output = 0011
+[PASS] Time: 46000 | Input = 0011 | Output = 0010
+[PASS] Time: 56000 | Input = 0100 | Output = 0110
+[PASS] Time: 66000 | Input = 0101 | Output = 0111
+[PASS] Time: 76000 | Input = 0110 | Output = 0101
+[PASS] Time: 86000 | Input = 0111 | Output = 0100
+[PASS] Time: 96000 | Input = 1000 | Output = 1100
+[PASS] Time: 106000 | Input = 1001 | Output = 1101
+[PASS] Time: 116000 | Input = 1010 | Output = 1111
+[PASS] Time: 126000 | Input = 1011 | Output = 1110
+[PASS] Time: 136000 | Input = 1100 | Output = 1010
+[PASS] Time: 146000 | Input = 1101 | Output = 1011
+[PASS] Time: 156000 | Input = 1110 | Output = 1001
+[PASS] Time: 166000 | Input = 1111 | Output = 1000
+[PASS] Time: 176000 | Input = 1111 | Output = 1000
+[PASS] Time: 186000 | Input = 0000 | Output = 0000
+[PASS] Time: 196000 | Input = 1111 | Output = 1000
+[PASS] Time: 206000 | Input = 0101 | Output = 0111
+----- Testbench Completed -----
