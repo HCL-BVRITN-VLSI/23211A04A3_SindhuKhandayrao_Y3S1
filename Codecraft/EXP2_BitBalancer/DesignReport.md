@@ -1,64 +1,70 @@
+## DebouncerLite Module Design Report
+
+## PROBLEM STATEMENT
+
+The goal of this project is to design a synchronous digital module that filters out noise from a digital input signal. Mechanical switches or sensors often produce glitches or bounces that generate multiple unwanted transitions. The DebouncerLite module ensures that only signals stable for a minimum of N clock cycles are considered valid, generating a clean, debounced output.
+
+## USE CASE
+
+Debouncing is widely used in:
+
+* Mechanical push-buttons or switches to prevent multiple unintended transitions.
+* Keypads and control panels in digital systems.
+* Any digital interface where a clean, glitch-free signal is required for reliable operation.
+
+## DESIGN REQUIREMENTS
+
+* The module accepts a noisy digital input signal.
+* Operates synchronously with a clock input (clk).
+* Supports an asynchronous reset (rst\_n) that clears the output.
+* Produces a clean, debounced output.
+* Output changes only when the input has been stable for N consecutive clock cycles.
+
+## DESIGN CONSTRAINTS
+
+* Synchronous design, with non-blocking assignments for sequential logic.
+* Active-low asynchronous reset.
+* Parameterizable stability period N.
+
+## DESIGN METHODOLOGY & IMPLEMENTATION DETAILS
+
+The DebouncerLite module works as follows:
+
+* The input signal passes through a counter-based stability checker.
+* If the input remains stable for N consecutive clock cycles, the output is updated.
+* The logic is implemented inside a sequential block triggered by posedge clk or negedge rst\_n.
+* Non-blocking assignments ensure proper sequential behavior and synthesis compatibility.
+* Because of the synchronous design, the debounced output changes only after the input has been stable for N clock cycles.
+
+## FUNCTIONAL SIMULATION METHODOLOGY & TEST CASES
+
+| Case | Scenario                | Expected Output               | Observation |
+| ---- | ----------------------- | ----------------------------- | ----------- |
+| 1    | Short glitch (\<N)      | No change                     | Correct     |
+| 2    | N-1 cycles high         | No change                     | Correct     |
+| 3    | Bouncy then stable HIGH | Goes high after N cycles      | Correct     |
+| 4    | Bouncy then stable LOW  | Goes low after N cycles       | Correct     |
+| 5    | Spaced spikes           | No change                     | Correct     |
+| 6    | Long high               | Goes high once                | Correct     |
+| 7    | Long low                | Goes low once                 | Correct     |
+| 8    | Rapid toggle            | Output stable                 | Correct     |
+| 9    | Two valid presses       | Detects both                  | Correct     |
+| 10   | Two valid releases      | Detects both                  | Correct     |
+| 11   | Reset                   | Output and counter cleared    | Correct     |
+| 12   | Post-reset press        | Output updates after N cycles | Correct     |
 
 
-# BitBalancer Module Design Report
+## RESULTS & ANALYSIS
 
-## Problem Statement
+* Simulation waveforms confirm that the output debounced signal matches the expected values for all noisy input patterns.
+* The output remains stable even when the input experiences rapid glitches.
+* The counter ensures the module ignores spurious transitions shorter than N clock cycles.
+* The module reliably produces a clean signal suitable for synchronous digital systems.
 
-The goal of this project is to design a synchronous digital module that counts the number of bits set to ‘1’ in an 8-bit input vector. The count must be updated on every clock cycle and reset asynchronously when required.
+## CHALLENGES & CONCLUSIONS
 
-## Use Case
-
-This bit counting functionality is critical in digital systems requiring parity checking, population count operations, error detection, or bit-level feature extraction. The synchronous design allows integration into clocked systems where data changes on clock edges.
-
-## Design Requirements
-
-* The module accepts an 8-bit input vector.
-* The module operates synchronously with a clock input (`clk`).
-* It supports an asynchronous reset (`reset`) that clears the count to zero.
-* The output is a 4-bit value representing the count of ‘1’ bits in the input vector.
-* The count updates on the rising edge of the clock.
-
-## Design Constraints
-
-* The design is synchronous and must use non-blocking assignments for correct behavior.
-* The reset signal is asynchronous and active-high.
-* The input width is fixed to 8 bits.
-
-## Design Methodology & Implementation Details
-
-The module uses an integer loop variable to iterate through all 8 bits of the input vector on every rising clock edge. It sums the number of bits set to ‘1’ and stores the result in a 4-bit register output `count`.
-
-When the asynchronous reset signal is asserted, the count is cleared immediately to zero. The use of non-blocking assignments ensures proper simulation and synthesis of sequential logic.
-
-## Functional Simulation Methodology & Test Cases
-
-| Test Case | Input (binary) | Expected Output | Description                               |
-| --------- | -------------- | --------------- | ------------------------------------------|
-| 1         | 00000000       | 0               | No bits set. Tests zero count             |
-| 2         | 11111111       | 8               | All bits set. Tests max count             |
-| 3         | 00000001       | 1               | Only least significant bit set            |
-| 4         | 10000000       | 1               | Only most significant bit set             |
-| 5         | 10101010       | 4               | Alternating bits set starting with MSB    |
-| 6         | 01010101       | 4               | Alternating bits starting with bit 6      |
-| 7         | 00111100       | 4               | Contiguous cluster of four bits in middle |
-| 8         | 00011000       | 2               | Sparse middle bits set                    |
-| 9         | 00001111       | 4               | Lower nibble set                          |
-| 10        | 11110000       | 4               | Upper nibble set                          |
-| 11        | 11000011       | 4               | Symmetric bits set at both ends           |
-| 12        | 10010110       | 4               | Mixed bit pattern                         |
-| 13        | 01111110       | 6               | Dense middle bits set                     |
-| 14        | 00000010       | 1               | Single middle bit set                     |
-| 15        | 01000001       | 2               | Bits set on both edges                    |
-| 16        | 00100100       | 2               | Two center bits set with gaps             |
-| 17        | 01100110       | 4               | Balanced pattern of bits set              |
-
-
-## Results & Analysis
-
-Simulation waveforms confirm that the count output accurately represents the number of ‘1’ bits present in the input vector at each clock cycle. The reset signal properly clears the count asynchronously. All test vectors passed successfully.
-
-## Challenges & Conclusions
-
-The primary challenge was ensuring correct use of non-blocking assignments and asynchronous reset in a synchronous design. The implemented design is robust, synthesizable, and can be integrated easily into larger synchronous digital systems. The bitbalancer module provides efficient and reliable bit counting functionality in synchronous environments.
-
+* The main challenge was ensuring that short glitches did not affect the output while maintaining timely responsiveness.
+* Determining the correct N value required balancing stability and reaction speed.
+* The current synchronous design is robust, synthesizable, and suitable for systems requiring controlled, clean digital signals.
+* For applications requiring faster response, N can be adjusted or combinational logic may be used for immediate output.
 
