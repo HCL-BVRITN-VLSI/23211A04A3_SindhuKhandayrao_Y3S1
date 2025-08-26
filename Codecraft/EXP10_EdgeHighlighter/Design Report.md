@@ -56,16 +56,15 @@ This experiment is a **straightforward, naive implementation**, primarily to und
 
 
 
-| **Case** | **Input Behavior**                  | **Expected Output**                                   | **Purpose / Check**                              |
-| -------- | ----------------------------------- | ----------------------------------------------------- | ------------------------------------------------ |
-| 1        | Single 1-cycle high pulse (`0→1→0`) | `rise_pulse` = 1 cycle, `fall_pulse` = 1 cycle        | Verify detection of very short pulses            |
-| 2        | Wide high (5 cycles)                | 1 `rise_pulse` at start, 1 `fall_pulse` at end        | Check no repeated pulses during long high period |
-| 3        | Two pulses separated by 1 low cycle | Each pulse produces 1 `rise_pulse` and 1 `fall_pulse` | Verify detection of multiple pulses in sequence  |
-| 4        | Long low (12 cycles)                | `rise_pulse` = 0, `fall_pulse` = 0                    | Ensure no false pulses when signal is steady     |
-| 5        | Alternate every cycle (`010101…`)   | `rise_pulse` and `fall_pulse` alternate each cycle    | Test rapid alternating signals and               |
-.
+| **Case** | **Input Behavior**                  | **Expected Output**                                   | **Purpose / Check**                                           |
+| -------- | ----------------------------------- | ----------------------------------------------------- | ------------------------------------------------------------- |
+| 1        | Single 1-cycle high pulse (`0→1→0`) | `rise_pulse` = 1 cycle, `fall_pulse` = 1 cycle        | Verify detection of very short pulses                         |
+| 2        | Wide high (5 cycles)                | 1 `rise_pulse` at start, 1 `fall_pulse` at end        | Check no repeated pulses during long high period              |
+| 3        | Two pulses separated by 1 low cycle | Each pulse produces 1 `rise_pulse` and 1 `fall_pulse` | Verify detection of multiple pulses in sequence               |
+| 4        | Long low (12 cycles)                | `rise_pulse` = 0, `fall_pulse` = 0                    | Ensure no false pulses when signal is steady                  |
+| 5        | Alternate every cycle (`010101…`)   | `rise_pulse` and `fall_pulse` alternate each cycle    | Test rapid alternating signals and edge detection correctness |
+| 6        | Mid-stream reset                    | Reset clears history; next edge detected fresh        | Validate async reset and correct edge detection after reset   |
 
-The testbench compares the DUT output (`rise_pulse` and `fall_pulse`) with a reference model and checks for mutual exclusivity.
 
 ---
 
