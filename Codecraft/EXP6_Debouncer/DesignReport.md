@@ -1,179 +1,74 @@
-## DESIGN REPORT: DebouncerLite Module
-## PROBLEM STATEMENT
 
-The goal of this project is to design a robust debouncing module that filters out noise from a digital input signal. Mechanical switches or sensors often produce glitches or bounces that can generate multiple unwanted transitions. The debouncerlite module ensures that only signals stable for a minimum of N clock cycles are considered valid, generating a clean, debounced output.
 
-## USE CASE
+# **DESIGN REPORT: DebouncerLite Module**
 
-Mechanical push-buttons or switches prone to bouncing
+## **Problem Statement**
 
-Sensors generating asynchronous noisy pulses
+The goal is to remove glitches and noise from a digital input signal. Mechanical switches or sensors can bounce, creating unwanted multiple transitions. This module ensures only signals stable for **N clock cycles** are considered valid.
 
-Any system requiring a stable digital input to trigger events reliably
+---
 
-The module ensures accurate detection of input changes, avoiding false triggers caused by short glitches or oscillations.
+## **Use Case**
 
-## DESIGN REQUIREMENTS
+* Mechanical switches or buttons
+* Sensors producing noisy pulses
+* Any system needing stable digital input
 
-Input signal is sampled synchronously with the clock.
+---
 
-Output toggles only after N consecutive cycles of a stable input level.
+## **Design Requirements**
 
-Asynchronous active-low reset initializes all registers.
+* Input sampled synchronously with clock.
+* Output changes only after **N stable cycles**.
+* Asynchronous active-low reset clears all registers.
+* Short glitches (< N cycles) are ignored.
 
-Counter tracks stability of the input relative to the current debounced output.
+---
 
-Short spikes shorter than N cycles are ignored.
+## **Design Method**
 
-## DESIGN CONSTRAINTS
+1. **Input Synchronization:** Two flip-flops (`sync1`, `sync2`) stabilize the input.
+2. **Stability Counter:** Counts cycles where input differs from `debounced`.
+3. **Debounced Update:** When count reaches N, output updates.
+4. **Reset Handling:** All registers reset asynchronously on `rst_n = 0`.
 
-Larger N increases noise immunity but adds latency to detection.
+---
 
-Module assumes a single clock domain.
+## **Simulation Observations from Waveform**
 
-Output is updated synchronously on the clock edge.
+* **sync1 and sync2** properly synchronize `noisy_in`.
+* **count** increments when `sync2` differs from `debounced`.
+* **debounced** changes only after count reaches N-1, confirming correct debounce.
+* Short spikes in `noisy_in` do **not** change `debounced`.
+* Long stable periods trigger output after N cycles.
+* Reset (`rst_n`) correctly clears `debounced` and `count`.
 
-## DESIGN METHODOLOGY
+Overall, the waveform confirms the module works correctly.
 
-Input Synchronization: Two flip-flops (sync1, sync2) synchronize the noisy input to avoid metastability.
+---
 
-Stability Counter: A counter tracks how long the input differs from the debounced output.
+## **Test Cases (Simplified)**
 
-Debounced Update: When the input remains stable for N cycles, debounced is updated.
+| Case | Scenario                | Expected Output               | Observation |
+| ---- | ----------------------- | ----------------------------- | ----------- |
+| 1    | Short glitch (\<N)      | No change                     | Correct     |
+| 2    | N-1 cycles high         | No change                     | Correct     |
+| 3    | Bouncy then stable HIGH | Goes high after N cycles      | Correct     |
+| 4    | Bouncy then stable LOW  | Goes low after N cycles       | Correct     |
+| 5    | Spaced spikes           | No change                     | Correct     |
+| 6    | Long high               | Goes high once                | Correct     |
+| 7    | Long low                | Goes low once                 | Correct     |
+| 8    | Rapid toggle            | Output stable                 | Correct     |
+| 9    | Two valid presses       | Detects both                  | Correct     |
+| 10   | Two valid releases      | Detects both                  | Correct     |
+| 11   | Reset                   | Output and counter cleared    | Correct     |
+| 12   | Post-reset press        | Output updates after N cycles | Correct     |
 
-Reset Handling: All registers and counters are cleared asynchronously on rst_n = 0.
+---
 
-## FUNCTIONAL SIMULATION & TEST CASES
-*CASE 1*: Short high glitch (<N)
+## **Conclusion**
 
-Scenario: Input briefly goes high for fewer than N cycles.
+The `debouncerlite` module successfully filters noise, ignores short glitches, and updates output only after N stable cycles. The uploaded waveform confirms correct operation.
 
-Expectation: No change in output.
 
-Result: debounced remains low.
 
-Analysis: Short glitches are ignored successfully.
-
-*CASE 2*: Exactly N-1 high then drop
-
-Scenario: Input goes high for N-1 cycles and then returns low.
-
-Expectation: Output should not change.
-
-Result: debounced remains low.
-
-Analysis: Module requires full N cycles to confirm stability.
-
-*CASE 3*: Bouncy then stable HIGH (>=N)
-
-Scenario: Input oscillates initially then remains high for >= N cycles.
-
-Expectation: Output transitions to high after stability period.
-
-Result: debounced correctly updates after N stable cycles.
-
-Analysis: Debouncer correctly filters initial bounce and detects stable signal.
-
-*CASE 4*: Bouncy then stable LOW (>=N)
-
-Scenario: Input oscillates then remains low for >= N cycles.
-
-Expectation: Output transitions to low after stability period.
-
-Result: debounced correctly updates low.
-
-Analysis: Module correctly identifies stable low despite bounces.
-
-*CASE 5*: Spaced spikes
-
-Scenario: Input toggles briefly with gaps in between.
-
-Expectation: Output does not change for isolated spikes.
-
-Result: debounced remains stable.
-
-Analysis: Short isolated transitions are ignored, demonstrating effective spike filtering.
-
-*CASE 6*: Clean press long
-
-Scenario: Input stays high for much longer than N cycles.
-
-Expectation: Output transitions high once.
-
-Result: debounced goes high after N cycles and remains high.
-
-Analysis: Continuous stable high input is handled correctly without multiple updates.
-
-*CASE 7*: Clean release long
-
-Scenario: Input stays low for much longer than N cycles.
-
-Expectation: Output transitions low once.
-
-Result: debounced goes low and stays low.
-
-Analysis: Long stable low signals are detected reliably.
-
-*CASE 8*: Rapid toggle
-
-Scenario: Input alternates rapidly, faster than N cycles.
-
-Expectation: Output remains stable.
-
-Result: No false transitions occur in debounced.
-
-Analysis: Module filters high-frequency noise successfully.
-
-*CASE 9*: Two valid presses
-
-Scenario: Two separate periods of stable high input, each >= N cycles.
-
-Expectation: Output toggles high for first stable input, low in between, then high again.
-
-Result: debounced reflects both presses correctly.
-
-Analysis: Multiple valid events are detected with correct timing.
-
-*CASE 10*: Two valid releases
-
-Scenario: Two separate stable low periods separated by high input.
-
-Expectation: Output toggles low appropriately.
-
-Result: debounced follows input correctly.
-
-Analysis: Module handles multiple low transitions accurately.
-
-*CASE 11*: Reset
-
-Scenario: Module reset is asserted during operation.
-
-Expectation: All registers and output cleared.
-
-Result: debounced, count, and sync registers reset to 0.
-
-Analysis: Reset works asynchronously and reliably.
-
-*CASE 12*: Post-reset press
-
-Scenario: Input goes high after reset.
-
-Expectation: Output transitions high after N stable cycles.
-
-Result: debounced updates correctly.
-
-Analysis: Module resumes normal operation after reset.
-
-RESULTS & ANALYSIS
-
-The module successfully filtered short glitches and bounces.
-
-Output only changes when input is stable for N consecutive cycles.
-
-Reset works as intended, and module recovers correctly.
-
-All 12 test cases passed with zero false transitions.
-
-CONCLUSIONS
-
-The debouncerlite module provides a simple and effective hardware solution to filter noisy digital inputs. It reliably generates debounced output signals suitable for mechanical switches, sensors, and other asynchronous inputs. By adjusting the parameter N, designers can balance noise immunity and detection latency according to their application needs.
