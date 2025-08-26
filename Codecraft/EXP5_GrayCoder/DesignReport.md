@@ -1,91 +1,74 @@
-## GrayCoder Module Design Report
+
+
+## DebouncerLite Module Design Report
 
 ## Problem Statement
 
-The goal of this project is to design a synchronous digital module that converts a 4-bit binary input into its equivalent Gray code representation. The design must update on the rising edge of the clock and reset asynchronously when required.
+The goal of this project is to design a synchronous digital module that filters out noise from a digital input signal. Mechanical switches or sensors often produce glitches or bounces that generate multiple unwanted transitions. The DebouncerLite module ensures that only signals stable for a minimum of N clock cycles are considered valid, generating a clean, debounced output.
 
 ## Use Case
 
-Binary → Gray code conversion is widely used in:
+Debouncing is widely used in:
 
-Digital communication systems to prevent large bit changes (error reduction).
-
-Rotary encoders and counters (to avoid glitches).
-
-Low-power digital design, where Gray codes reduce switching activity.
+* Mechanical push-buttons or switches to prevent multiple unintended transitions.
+* Keypads and control panels in digital systems.
+* Any digital interface where a clean, glitch-free signal is required for reliable operation.
 
 ## Design Requirements
 
-The module accepts a 4-bit binary input.
-
-Operates synchronously with a clock input (clk).
-
-Supports an asynchronous reset (reset) that clears the output.
-
-Produces a 4-bit Gray code output.
-
-Output updates on the rising edge of the clock.
+* The module accepts a noisy digital input signal.
+* Operates synchronously with a clock input (clk).
+* Supports an asynchronous reset (rst\_n) that clears the output.
+* Produces a clean, debounced output.
+* Ensures the output changes only when the input has been stable for N consecutive clock cycles.
 
 ## Design Constraints
 
-Synchronous design, with non-blocking assignments for sequential logic.
-
-Active-high asynchronous reset.
-
-Input width is fixed to 4 bits.
+* Synchronous design, with non-blocking assignments for sequential logic.
+* Active-low asynchronous reset.
+* Parameterizable stability period N for flexibility.
 
 ## Design Methodology & Implementation Details
 
-The Gray code is generated using the formula:
+The DebouncerLite module works as follows:
 
-gray[N-1] = binary[N-1] (MSB same)
-
-gray[i] = binary[i] XOR binary[i+1] for all remaining bits.
-
-The conversion is coded inside a sequential block triggered by posedge clk or posedge reset.
-
-Because of the synchronous design, the Gray output changes one clock cycle after the binary input changes (this is visible in the simulation waveform).
+* Input signal passes through a counter-based stability checker.
+* If the input remains stable for N consecutive clock cycles, the output is updated.
+* The design uses a sequential always block triggered by posedge clk or negedge rst\_n.
+* Non-blocking assignments ensure proper sequential behavior and synthesis compatibility.
+* The module provides a clean output that eliminates glitches or bounces from mechanical switches.
 
 ## Functional Simulation Methodology & Test Cases
 
-| Test Case | Binary Input | Expected Gray Output |
-| --------- | ------------ | -------------------- |
-| 1         | 0000         | 0000                 |
-| 2         | 0001         | 0001                 |
-| 3         | 0010         | 0011                 |
-| 4         | 0011         | 0010                 |
-| 5         | 0100         | 0110                 |
-| 6         | 0101         | 0111                 |
-| 7         | 0110         | 0101                 |
-| 8         | 0111         | 0100                 |
-| 9         | 1000         | 1100                 |
-| 10        | 1001         | 1101                 |
-| 11        | 1010         | 1111                 |
-| 12        | 1011         | 1110                 |
-| 13        | 1100         | 1010                 |
-| 14        | 1101         | 1011                 |
-| 15        | 1110         | 1001                 |
-| 16        | 1111         | 1000                 |
-| 17        | 1111         | 1000                 |
-| 18        | 0000         | 0000                 |
-| 19        | 1111         | 1000                 |
-| 20        | 0101         | 0111                 |
+| Case | Scenario                | Expected Output               | Observation |
+| ---- | ----------------------- | ----------------------------- | ----------- |
+| 1    | Short glitch (\<N)      | No change                     | Correct     |
+| 2    | N-1 cycles high         | No change                     | Correct     |
+| 3    | Bouncy then stable HIGH | Goes high after N cycles      | Correct     |
+| 4    | Bouncy then stable LOW  | Goes low after N cycles       | Correct     |
+| 5    | Spaced spikes           | No change                     | Correct     |
+| 6    | Long high               | Goes high once                | Correct     |
+| 7    | Long low                | Goes low once                 | Correct     |
+| 8    | Rapid toggle            | Output stable                 | Correct     |
+| 9    | Two valid presses       | Detects both                  | Correct     |
+| 10   | Two valid releases      | Detects both                  | Correct     |
+| 11   | Reset                   | Output and counter cleared    | Correct     |
+| 12   | Post-reset press        | Output updates after N cycles | Correct     |
 
+
+>
 
 ## Results & Analysis
 
-The simulation waveform confirms that the output gray_out matches the expected Gray code for every binary input.
-
-As designed, the Gray output updates one clock cycle after the binary input changes (pipeline behavior).
-
-The expected signal in the waveform is used as a reference for functional correctness.
-
-
+* Simulation waveforms confirm that the debounced output matches expectations for all input patterns.
+* The output remains stable even when the input experiences rapid glitches.
+* The counter ensures the module ignores spurious transitions shorter than N clock cycles.
+* The module reliably produces a clean signal suitable for synchronous digital systems.
 
 ## Challenges & Conclusions
 
-The main challenge was understanding the latency caused by the synchronous update: Gray code conversion is inherently combinational, but implementing it inside a clocked always block introduces one-cycle delay.
+* The main challenge was ensuring proper timing and avoiding race conditions in the counter-based logic.
+* Determining the appropriate value of N required balancing responsiveness and glitch filtering.
+* The DebouncerLite design is synthesizable, robust, and provides reliable debouncing for mechanical inputs.
+* For systems requiring immediate response, the stability period N can be adjusted or the module can be combined with combinational logic.
 
-If immediate output is required, the logic should be implemented using always @(*) (combinational).
-
-The current synchronous design is robust, synthesizable, and suitable for pipelined systems where controlled timing is preferred.
