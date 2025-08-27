@@ -1,6 +1,4 @@
 
----
-
 # RotatorUnit Module Design Report
 
 ## PROBLEM STATEMENT
