@@ -1,0 +1,20 @@
+CASE 1: Reset & hold
+
+CASE 2: Load 0x12, rotate LEFT 10 steps
+
+CASE 3: Pause hold
+
+CASE 4: Rotate RIGHT 9 steps
+
+CASE 5: Toggle dir every cycle
+
+CASE 6: Load 0x80 mid-run, then LEFT 1 step
+
+CASE 7: Load attempt with enable=0 (ignored), then re-enable
+"testbench.sv", 83: tb_rotatorunit.unnamed$$_0: started at 575000ps failed at 575000ps
+	Offending '(data_out === ref_state)'
+Fatal: "testbench.sv", 83: tb_rotatorunit.unnamed$$_0: at time 575000 ps
+Mismatch t=575000: data_out=10100101 REF=00000001
+$finish called from file "testbench.sv", line 83.
+PASS: All 6 tests passed (errors=0).
+$finish at simulation time               575000
