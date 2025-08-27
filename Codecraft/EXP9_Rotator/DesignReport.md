@@ -1,13 +1,3 @@
-Got it ✅ — you’d like a **RotatorUnit Design Report** in the same style as your **SeqCheck report**, but tailored for your **rotatorunit**, mentioning:
-
-* **Problem statement** and goals.
-* **Use case.**
-* **Design requirements & constraints.**
-* **Implementation details.**
-* **Simulation/test cases 1–10** (cases 1–6 passed, case 7 failed, rest not debugged).
-* **Results, challenges & conclusions.**
-
-Here’s a complete draft report for your RotatorUnit project:
 
 ---
 
