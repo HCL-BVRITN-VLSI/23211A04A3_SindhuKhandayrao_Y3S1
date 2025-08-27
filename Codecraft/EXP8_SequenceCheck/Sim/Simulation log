@@ -1,0 +1,17 @@
+Compiler version U-2023.03-SP2_Full64; Runtime version U-2023.03-SP2_Full64;  Aug 27 13:16 2025
+
+CASE 1: 3 rises within W -> one hit
+
+CASE 2: 3 rises spaced > W (no hit)
+
+CASE 3: Dense edges -> periodic hits
+
+CASE 4: Reset clears window
+
+CASE 5: Long HIGH then two rises -> one hit
+
+CASE 6: Alternate 0/1 each cycle
+
+CASE 7: Constant low (no edges)
+$finish called from file "testbench.sv", line 221.
+PASS: All 7 tests passed (errors=0).
